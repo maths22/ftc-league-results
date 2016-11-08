@@ -134,7 +134,7 @@ class EventsController extends AppController
             $matchFile = null;
             $divisionsFile = null;
             for ($i=0; $i<$za->numFiles;$i++) {
-                $filename = basename($za->statIndex($i)['name']);
+                $filename = basename(str_replace("\\","/",$za->statIndex($i)['name']));
                 if($filename == 'matches.txt') {
                     $matchFile = $za->getFromIndex($i);
                 }
@@ -142,7 +142,6 @@ class EventsController extends AppController
                     $divisionsFile = $za->getFromIndex($i);
                 }
             }
-
             $event->name = explode("\n",$divisionsFile)[1];
 
             $successs = true;
@@ -178,7 +177,6 @@ class EventsController extends AppController
                     // proc_close in order to avoid a deadlock
                     $return_value = proc_close($process);
                 }
-
                 $parsedMatchFile = array_map(function ($l) {
                     return str_getcsv($l, '|');
                 }, explode("\n", $matchContent));
@@ -192,7 +190,6 @@ class EventsController extends AppController
                         $match->rp = $matchArr[3];
                         $match->score = $matchArr[4];
                         $match->event_id = $event->id;
-//debug($match);
                         $successs = $successs && $this->Events->Matches->save($match);
                     }
                 }
@@ -200,8 +197,6 @@ class EventsController extends AppController
 
             if ($successs) {
                 $this->Flash->success(__('The event has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The event could not be saved. Please, try again.'));
             }
