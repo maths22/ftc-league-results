@@ -1,11 +1,8 @@
 <nav class="large-3 medium-4 columns" id="actions-sidebar">
     <ul class="side-nav">
         <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('List Event'), ['action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('List Divisions'), ['controller' => 'Divisions', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Division'), ['controller' => 'Divisions', 'action' => 'add']) ?></li>
-        <li><?= $this->Html->link(__('List Matches'), ['controller' => 'Matches', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Matches'), ['controller' => 'Matches', 'action' => 'add']) ?></li>
+        <li><?= $this->Html->link(__('All Team Rankings'), ['controller' => 'Teams', 'action' => 'rankings']) ?> </li>
+        <li><?= $this->Html->link(__('List Divisions'), ['controller' => 'Divisions', 'action' => 'summary']) ?></li>
     </ul>
 </nav>
 <div class="event form large-9 medium-8 columns content">

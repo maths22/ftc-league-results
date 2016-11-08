@@ -2,6 +2,7 @@
 <?php if (!empty($rankings)): ?>
     <table cellpadding="0" cellspacing="0" class="table">
         <tr>
+            <th scope="col"><?= __('Rank') ?></th>
             <th scope="col"><?= __('Number') ?></th>
             <th scope="col"><?= __('Name') ?></th>
 
@@ -18,8 +19,9 @@
             <th scope="col"><?= __('High Score') ?></th>
             <th scope="col"><?= __('Matches Played') ?></th>
         </tr>
-        <?php foreach ($rankings as $ranking): ?>
+        <?php foreach ($rankings as $i => $ranking): ?>
             <tr>
+                <td><?= $i + 1 ?></td>
                 <td>
                     <?= $this->Html->link($ranking['team_id'], ['controller' => 'Teams', 'action' => 'summary', $ranking['team_id']]) ?>
                 </td>
