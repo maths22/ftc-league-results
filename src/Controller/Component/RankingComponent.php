@@ -41,6 +41,9 @@ class RankingComponent extends Component
 
     public function computeRanking($team) {
         $matches = $team->matches;
+        $matches = array_filter($matches, function($match) {
+           return $match->qp >= 0;
+        });
 
         $matches_played = sizeof($matches);
 
