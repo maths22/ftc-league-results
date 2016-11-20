@@ -75,6 +75,14 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->fallbacks(DashedRoute::class);
 });
 
+//Persist iframe param
+Router::addUrlFilter(function ($params, $request) {
+    if (isset($request->query['embed']) && !isset($params['embed'])) {
+        $params['embed'] = $request->query['embed'];
+    }
+    return $params;
+});
+
 /**
  * Load all plugin routes.  See the Plugin documentation on
  * how to customize the loading of plugin routes.

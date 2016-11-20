@@ -79,5 +79,11 @@ class AppController extends Controller
     public function beforeFilter(Event $event)
     {
         $this->Auth->allow(['rankings', 'summary', 'display']);
+        if($this->request->query('embed')) {
+           $this->viewBuilder()->layout('embed');
+           $this->set('embed', true);
+        } else {
+           $this->set('embed', false);
+        }
     }
 }

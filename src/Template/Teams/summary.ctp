@@ -1,3 +1,4 @@
+<?php if(!$embed): ?>
 <nav class="large-3 medium-4 columns" id="actions-sidebar">
     <ul class="side-nav">
         <li class="heading"><?= __('Actions') ?></li>
@@ -6,7 +7,8 @@
         <li><?= $this->Html->link(__('Division Rankings'), ['controller' => 'Divisions', 'action' => 'rankings', $team->division->id]) ?> </li>
     </ul>
 </nav>
-<div class="teams view large-9 medium-8 columns content">
+<?php endif; ?>
+<div class="teams view <?= $embed?'':'large-9 medium-8' ?> columns content">
     <h3><?= h($team->id . ' - ' . $team->name) ?></h3>
     <table class="vertical-table">
         <tr>

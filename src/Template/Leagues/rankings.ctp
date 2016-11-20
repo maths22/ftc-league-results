@@ -1,3 +1,4 @@
+<?php if(!$embed): ?>
 <nav class="large-3 medium-4 columns" id="actions-sidebar">
     <ul class="side-nav">
         <li class="heading"><?= __('Actions') ?></li>
@@ -7,7 +8,8 @@
         <?php endforeach; ?>
     </ul>
 </nav>
-<div class="leagues view large-9 medium-8 columns content">
+<?php endif; ?>
+<div class="leagues view <?= $embed?'':'large-9 medium-8' ?> columns content">
     <h3><?= h($league->name) ?> Rankings</h3>
 
     <div class="related table-responsive">
