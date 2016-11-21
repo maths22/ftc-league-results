@@ -32,11 +32,35 @@
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
     <?= $this->fetch('script') ?>
+    
+    <script>
+//Taken from http://stackoverflow.com/questions/5999118/add-or-update-query-string-parameter
+function removeQueryStringParameter(uri, key) {
+  var re = new RegExp("([?&])" + key + "=.*?(&|#|$)", "i");
+  if (uri.match(re)) {
+    return uri.replace(re, '$1' + '$2');
+  } else {
+    var hash =  '';
+    if( uri.indexOf('#') !== -1 ){
+        hash = uri.replace(/.*#/, '#');
+        uri = uri.replace(/#.*/, '');
+    }
+    var separator = uri.indexOf('?') !== -1 ? "&" : "?";    
+    return uri + separator + hash;
+  }
+}    
+    if(this.top == this) {
+      window.location.href = removeQueryStringParameter(window.location.href, 'embed');
+    }
+    
+    </script>
+
 </head>
 <body>
     <?= $this->Flash->render() ?>
     <div class="container clearfix">
         <?= $this->fetch('content') ?>
     </div>
+    
 </body>
 </html>
