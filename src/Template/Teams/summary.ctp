@@ -33,7 +33,7 @@
             </tr>
             <?php foreach ($team->matches as $matches): ?>
             <tr>
-                <td><?= h($matches->event->name) ?></td>
+                <td><?= h($team->division->league->name  . ' ' . $team->division->name . ' - ' . $matches->event->name) ?></td>
                 <td><?= h($matches->num) ?></td>
                 <td><?= h($matches->qp) ?></td>
                 <td><?= h($matches->rp) ?></td>
