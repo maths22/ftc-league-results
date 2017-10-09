@@ -2,10 +2,10 @@
     <ul class="side-nav">
         <li class="heading"><?= __('Actions') ?></li>
         <li><?= $this->Html->link(__('New Team'), ['action' => 'add']) ?></li>
-        <li><?= $this->Html->link(__('List Divisions'), ['controller' => 'Divisions', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Division'), ['controller' => 'Divisions', 'action' => 'add']) ?></li>
         <li><?= $this->Html->link(__('List Matches'), ['controller' => 'Matches', 'action' => 'index']) ?></li>
         <li><?= $this->Html->link(__('New Match'), ['controller' => 'Matches', 'action' => 'add']) ?></li>
+        <li><?= $this->Html->link(__('List Divisions'), ['controller' => 'Divisions', 'action' => 'index']) ?></li>
+        <li><?= $this->Html->link(__('New Division'), ['controller' => 'Divisions', 'action' => 'add']) ?></li>
     </ul>
 </nav>
 <div class="teams index large-9 medium-8 columns content">
@@ -15,6 +15,10 @@
             <tr>
                 <th scope="col"><?= $this->Paginator->sort('id') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('name') ?></th>
+                <th scope="col"><?= $this->Paginator->sort('organization') ?></th>
+                <th scope="col"><?= $this->Paginator->sort('city') ?></th>
+                <th scope="col"><?= $this->Paginator->sort('state') ?></th>
+                <th scope="col"><?= $this->Paginator->sort('country') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('division_id') ?></th>
                 <th scope="col" class="actions"><?= __('Actions') ?></th>
             </tr>
@@ -22,9 +26,13 @@
         <tbody>
             <?php foreach ($teams as $team): ?>
             <tr>
-                <td><?= $this->Number->format($team->id) ?></td>
+                <td><?= $team->id ?></td>
                 <td><?= h($team->name) ?></td>
-                <td><?= $team->has('division') ? $this->Html->link($team->division->name, ['controller' => 'Divisions', 'action' => 'view', $team->division->id]) : '' ?></td>
+                <td><?= h($team->organization) ?></td>
+                <td><?= h($team->city) ?></td>
+                <td><?= h($team->state) ?></td>
+                <td><?= h($team->country) ?></td>
+                <td><?= $this->Number->format($team->division_id) ?></td>
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['action' => 'view', $team->id]) ?>
                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $team->id]) ?>

@@ -11,7 +11,7 @@
     <h3>
         <?= $division->has('league') ? $this->Html->link($division->league->name, ['controller' => 'Leagues', 'action' => 'rankings', $division->league->id]) : '' ?>
         -
-        <?= h($division->name) ?> Rankings
+        <?= h($division->name) ?> Rankings (after <?= count($division->events) ?> events)
     </h3>
     <div class="related table-responsive">
         <?= $this->element('rankings', ['showDivisions' => false, 'showLeagues' => false]); ?>

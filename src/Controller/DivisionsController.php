@@ -35,7 +35,7 @@ class DivisionsController extends AppController
     public function summary()
     {
         $divisions = $this->Divisions->find('all', [
-            'contain' => ['Leagues']
+            'contain' => ['Leagues','Events']
         ]);
 
         $this->set(compact('divisions'));
@@ -137,4 +137,20 @@ class DivisionsController extends AppController
         $this->set('division', $division);
         $this->set('rankings', $rankings);
     }
+
+    public function assign() {
+        $divisions = $this->Divisions->find('list', ['limit' => 200]);
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $division = $this->Divisions->patchEntity($division, $this->request->data);
+            if ($this->Divisions->save($division)) {
+                $this->Flash->success(__('The division has been saved.'));
+
+                return $this->redirect(['action' => 'index']);
+            } else {
+                $this->Flash->error(__('The division could not be saved. Please, try again.'));
+            }
+        }
+        $this->set(compact('divisions'));
+    }
+
 }

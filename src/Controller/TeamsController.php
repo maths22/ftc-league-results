@@ -131,7 +131,7 @@ class TeamsController extends AppController
 
     public function rankings($id = null) {
         $teams = $this->Teams->find('all', [
-            'contain' => ['Matches', 'Divisions', 'Divisions.Leagues']
+            'contain' => ['Matches', 'Divisions', 'Divisions.Leagues'],
         ])->toList();
 //        debug($teams);
 
