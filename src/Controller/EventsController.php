@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Http\Client;
 use Cake\Utility\Inflector;
@@ -155,9 +156,8 @@ class EventsController extends AppController
     {
         $http = new Client();
 
-        //TODO externalize
-        $response = $http->post('https://ftc-results.firstillinoisrobotics.org/live/register/process-registration.php', [
-            'security-key' => '06A4bO48UHK4Bfwc0FmDV3ovLu1fcF8u',
+        $response = $http->post(Configure::read('LiveResults.registrationUrl'), [
+            'security-key' => Configure::read('LiveResults.securityKey'),
             'event-key' => $slug,
             'json' => true,
         ]);
