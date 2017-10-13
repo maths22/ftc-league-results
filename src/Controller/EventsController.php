@@ -124,7 +124,10 @@ class EventsController extends AppController
         $divisions = $this->Events->Divisions->find('list', ['limit' => 200, 'valueField' => function ($e) {
             return $e->league->name . ' - ' . $e->name;
         }])->contain(['Leagues']);
-        $this->set(compact('event', 'divisions'));
+        $leagues = $this->Events->Leagues->find('list', ['limit' => 200, 'valueField' => function ($e) {
+            return $e->name;
+        }]);
+        $this->set(compact('event', 'divisions', 'leagues'));
         $this->set('_serialize', ['event']);
     }
 
@@ -220,7 +223,7 @@ class EventsController extends AppController
         $divisionsFile .= 'Event Name' . $linebreak;
         $divisionsFile .= $event->name . $linebreak;
         $divisionsFile .= 'Event Type' . $linebreak;
-        $divisionsFile .= $event->type == 'championship' ? 'LEAGUE_CHAMPIONSHIP' : 'LEAGUE' . $linebreak;
+        $divisionsFile .= ($event->type == 'championship' ? 'LEAGUE_CHAMPIONSHIP' : 'LEAGUE') . $linebreak;
         $divisionsFile .= 'Using Multiple Divisions' . $linebreak;
         $divisionsFile .= 'false' . $linebreak;
         $divisionsFile .= 'Number|Name|Matches Per Team|Password' . $linebreak;
