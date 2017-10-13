@@ -25,8 +25,8 @@ class EventsTableTest extends TestCase
      */
     public $fixtures = [
         'app.events',
-        'app.divisions',
         'app.leagues',
+        'app.divisions',
         'app.teams',
         'app.matches'
     ];
@@ -39,7 +39,7 @@ class EventsTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Events') ? [] : ['className' => 'App\Model\Table\EventsTable'];
+        $config = TableRegistry::exists('Events') ? [] : ['className' => EventsTable::class];
         $this->Events = TableRegistry::get('Events', $config);
     }
 
