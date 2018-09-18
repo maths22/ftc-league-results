@@ -11,7 +11,8 @@
             <tr>
                 <th scope="col"><?= __('League') ?></th>
                 <th scope="col"><?= __('Division') ?></th>
-<!--                <th scope="col">--><?//= __('Events Completed') ?><!--</th>-->
+                <th scope="col"><?= __('Number of Teams') ?></th>
+<!--                <th scope="col"><?= __('Events Completed') ?></th>-->
             </tr>
         </thead>
         <tbody>
@@ -19,7 +20,8 @@
             <tr>
                 <td><?= $division->has('league') ? $this->Html->link($division->league->name, ['controller' => 'Leagues', 'action' => 'rankings', $division->league->id]) : '' ?></td>
                 <td><?= $this->Html->link($division->name, ['controller' => 'Divisions', 'action' => 'rankings', $division->id])     ?></td>
-<!--                <td>--><?//= count($division->events) ?><!--</td>-->
+                <td><?= count($division->teams) ?></td>
+<!--                <td><?= count($division->events) ?></td>-->
             </tr>
             <?php endforeach; ?>
         </tbody>

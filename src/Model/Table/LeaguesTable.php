@@ -32,11 +32,14 @@ class LeaguesTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('leagues');
-        $this->displayField('name');
-        $this->primaryKey('id');
+        $this->setTable('leagues');
+        $this->setDisplayField('name');
+        $this->setPrimaryKey('id');
 
         $this->hasMany('Divisions', [
+            'foreignKey' => 'league_id'
+        ]);
+        $this->hasMany('Events', [
             'foreignKey' => 'league_id'
         ]);
     }

@@ -43,6 +43,8 @@ use Cake\Routing\Route\DashedRoute;
  */
 Router::defaultRouteClass(DashedRoute::class);
 
+Router::extensions(['json']);
+
 Router::scope('/', function (RouteBuilder $routes) {
     /**
      * Here, we are connecting '/' (base path) to a controller called 'Pages',
@@ -77,14 +79,8 @@ Router::scope('/', function (RouteBuilder $routes) {
 
 //Persist iframe param
 Router::addUrlFilter(function ($params, $request) {
-    if (isset($request->query['embed']) && !isset($params['embed'])) {
-        $params['embed'] = $request->query['embed'];
+    if ($request->getParam('embed') && !$params['embed']) {
+        $params['embed'] = $request->getQuery['embed'];
     }
     return $params;
 });
-
-/**
- * Load all plugin routes.  See the Plugin documentation on
- * how to customize the loading of plugin routes.
- */
-Plugin::routes();

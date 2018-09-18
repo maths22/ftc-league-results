@@ -66,7 +66,7 @@ class AppController extends Controller
     public function beforeRender(Event $event)
     {
         if (!array_key_exists('_serialize', $this->viewVars) &&
-            in_array($this->response->type(), ['application/json', 'application/xml'])
+            in_array($this->response->getType(), ['application/json', 'application/xml'])
         ) {
             $this->set('_serialize', true);
         }
@@ -79,8 +79,8 @@ class AppController extends Controller
     public function beforeFilter(Event $event)
     {
         $this->Auth->allow(['rankings', 'summary', 'display']);
-        if($this->request->query('embed')) {
-           $this->viewBuilder()->layout('embed');
+        if($this->request->getQuery('embed')) {
+           $this->viewBuilder()->setLayout('embed');
            $this->set('embed', true);
         } else {
            $this->set('embed', false);

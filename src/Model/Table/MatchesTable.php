@@ -33,9 +33,9 @@ class MatchesTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('matches');
-        $this->displayField('id');
-        $this->primaryKey('id');
+        $this->setTable('matches');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey('id');
 
         $this->belongsTo('Teams', [
             'foreignKey' => 'team_id',

@@ -42,7 +42,7 @@
         </ul>
         <div class="top-bar-section">
             <ul class="right">
-                <li><?= $this->Html->link(__('Events'), ['controller' => 'Events', 'action' => 'all']) ?></li>
+                <!--<li><?= $this->Html->link(__('Events'), ['controller' => 'Events', 'action' => 'all']) ?></li>-->
                 <?php if($authUser == null): ?>
                 <li><?= $this->Html->link(__('Login'), ['controller' => 'Users', 'action' => 'login']) ?></li>
                 <?php else: ?>

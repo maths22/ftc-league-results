@@ -34,9 +34,9 @@ class DivisionsTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('divisions');
-        $this->displayField('name');
-        $this->primaryKey('id');
+        $this->setTable('divisions');
+        $this->setDisplayField('name');
+        $this->setPrimaryKey('id');
 
         $this->belongsTo('Leagues', [
             'foreignKey' => 'league_id',

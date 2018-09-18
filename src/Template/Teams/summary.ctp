@@ -19,6 +19,20 @@
                 <?= $team->has('division') ? $this->Html->link($team->division->name, ['controller' => 'Divisions', 'action' => 'rankings', $team->division->id]) : '' ?>
             </td>
         </tr>
+        <tr>
+            <th scope="row"><?= __('Organization') ?></th>
+            <td>
+                <?= str_replace("/","<br/>",$team->organization) ?>
+            </td>
+        </tr>
+        <tr>
+            <th scope="row"><?= __('Location') ?></th>
+            <td>
+                <?= $team->city ?>,
+                <?= $team->state ?>,
+                <?= $team->country ?>
+            </td>
+        </tr>
     </table>
     <div class="related">
         <h4><?= __('Matches') ?></h4>

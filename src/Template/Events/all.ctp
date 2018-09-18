@@ -12,6 +12,7 @@
 </nav>
 <div class="events index large-9 medium-8 columns content">
     <h3><?= __('Events') ?></h3>
+    Please remember after your event to submit event results here: <?= $this->Html->link('Upload Results Here', 'https://goo.gl/forms/b4c3nYsVT078X3or2') ?>
     <table cellpadding="0" cellspacing="0">
         <thead>
             <tr>
@@ -39,15 +40,18 @@
                 </td>
                 <td><?= h($event->name) ?></td>
                 <td><?= h($event->date) ?></td>
-                <td><?= $event->imported ? 'Yes' : 'No' ?></td>
                 <td>
-                    <?= $event->has('web_url') ? $this->Html->link('Results', $event->web_url, ['target' => '_blank']) : ' ' ?>
+                    <?= $event->imported ? 'Yes' : 'No' ?>
+
+                    <?php if($authUser != null && !$event->imported ): ?>
+                        <br/> <?= $this->Html->link(__('Import'), ['action' => 'upload', $event->id]) ?>
+                    <?php endif; ?>
+                </td>
+                <td>
+                    <?= $event->has('web_url') && (!$event->imported || true) ? $this->Html->link('Results', $event->web_url, ['target' => '_blank']) : ' ' ?>
                 </td>
                 <td class="actions">
-                    <?= $this->Html->link(__('Download'), ['action' => 'generateScoringSystem', $event->id]) ?>
-                    <?php if($authUser != null): ?>
-                        <?= $this->Html->link(__('Upload'), ['action' => 'upload', $event->id]) ?>
-                    <?php endif; ?>
+                    <?= $event->imported ? $this->Html->link('Archive', '/event_results/'.$event->id) : $this->Html->link(__('Download'), ['action' => 'generateScoringSystem', $event->id]) ?>
                 </td>
             </tr>
             <?php endforeach; ?>

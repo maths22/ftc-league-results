@@ -42,7 +42,7 @@ class RankingComponent extends Component
     public function computeRanking($team) {
         $matches = $team->matches;
         $matches = array_filter($matches, function($match) {
-           return $match->qp >= 0;
+           return $match->qp >= 0 && $match->event->type != 'championship';
         });
 
         $matches_played = sizeof($matches);
@@ -60,8 +60,6 @@ class RankingComponent extends Component
             return $diff;
         });
 
-        $matches = array_slice($matches, 0, 10);
-
         $ret = [
             'team_id' => $team->id,
             'team_name' => $team->name,
@@ -71,10 +69,16 @@ class RankingComponent extends Component
             'rp' => 0,
             'scores' => []
         ];
+
+        foreach($matches as $match) {
+            $ret['scores'][] = $match->score;
+        }
+
+        $matches = array_slice($matches, 0, 10);
+
         foreach($matches as $match) {
             $ret['qp'] += $match->qp;
             $ret['rp'] += $match->rp;
-            $ret['scores'][] = $match->score;
         }
         rsort($ret['scores']);
 

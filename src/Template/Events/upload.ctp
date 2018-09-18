@@ -34,6 +34,10 @@
             echo $this->Form->input('scoring_dump', ['type' => 'file']);
         ?>
     </fieldset>
+
+    <?php if($event->imported): ?>
+        <span style="color: red; font-size: 2em; font-weight: bold;">Warning: this event has already been imported!</span>
+    <?php endif; ?>
     <?= $this->Form->button(__('Submit')) ?>
     <?= $this->Form->end() ?>
 </div>

@@ -33,9 +33,9 @@ class TeamsTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('teams');
-        $this->displayField('name');
-        $this->primaryKey('id');
+        $this->setTable('teams');
+        $this->setDisplayField('name');
+        $this->setPrimaryKey('id');
 
         $this->belongsTo('Divisions', [
             'foreignKey' => 'division_id',

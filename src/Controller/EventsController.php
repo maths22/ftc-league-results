@@ -196,11 +196,13 @@ class EventsController extends AppController
             foreach($event->division->league->divisions as $division) {
                 $teams = array_merge($teams, $division->teams);
             }
-            foreach($teams as $team) {
-                if($team->division->id == $event->division_id) {
-                    $team->present = true;
-                } else {
-                    $team->present = false;
+            if(count($event->division->teams) < 15) {
+                foreach ($teams as $team) {
+                    if ($team->division->id == $event->division_id) {
+                        $team->present = true;
+                    } else {
+                        $team->present = false;
+                    }
                 }
             }
         }
