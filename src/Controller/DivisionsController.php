@@ -35,7 +35,7 @@ class DivisionsController extends AppController
     public function summary()
     {
         $divisions = $this->Divisions->find('all', [
-            'contain' => ['Leagues','Events']
+            'contain' => ['Leagues','Events','Teams']
         ]);
 
         $this->set(compact('divisions'));

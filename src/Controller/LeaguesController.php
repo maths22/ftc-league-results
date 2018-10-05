@@ -46,6 +46,25 @@ class LeaguesController extends AppController
         $this->set('_serialize', ['league']);
     }
 
+    public function list()
+    {
+        $leagues = $this->Leagues->find('all');
+
+        $this->set('leagues', $leagues);
+        $this->set('_serialize', ['leagues']);
+    }
+
+
+    public function details($slug)
+    {
+        $league = $this->Leagues->findBySlug($slug)
+            ->contain(['Divisions','Events','Divisions.Teams','Divisions.Events'])
+            ->first();
+
+        $this->set(compact('league'));
+        $this->set('_serialize', ['league']);
+    }
+
     /**
      * Add method
      *
