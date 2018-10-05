@@ -46,7 +46,7 @@ class LeaguesController extends AppController
         $this->set('_serialize', ['league']);
     }
 
-    public function list()
+    public function all()
     {
         $leagues = $this->Leagues->find('all');
 
