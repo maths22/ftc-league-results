@@ -78,7 +78,7 @@ class AppController extends Controller
 
     public function beforeFilter(Event $event)
     {
-        $this->Auth->allow(['rankings', 'summary', 'display', 'list', 'all']);
+        $this->Auth->allow(['rankings', 'summary', 'display', 'details', 'all']);
         if($this->request->getQuery('embed')) {
            $this->viewBuilder()->setLayout('embed');
            $this->set('embed', true);
