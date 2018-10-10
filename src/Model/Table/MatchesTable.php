@@ -64,14 +64,14 @@ class MatchesTable extends Table
             ->notEmpty('num');
 
         $validator
+            ->integer('tbp')
+            ->requirePresence('tbp', 'create')
+            ->notEmpty('tbp');
+
+        $validator
             ->integer('rp')
             ->requirePresence('rp', 'create')
             ->notEmpty('rp');
-
-        $validator
-            ->integer('qp')
-            ->requirePresence('qp', 'create')
-            ->notEmpty('qp');
 
         $validator
             ->integer('score')

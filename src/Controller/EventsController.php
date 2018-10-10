@@ -7,6 +7,7 @@ use Cake\Event\Event;
 use Cake\Http\Client;
 use Cake\Utility\Inflector;
 use Cake\Utility\Text;
+use SQLite3;
 use ZipArchive;
 
 /**
@@ -176,81 +177,30 @@ class EventsController extends AppController
 
     public function generateScoringSystem($id = null)
     {
-        $scoring_system = ROOT . DS . 'external' . DS . 'ftc-scoring.zip';
-        $scoring_system_path =  tempnam(sys_get_temp_dir(), 'ftcscoring');
+
+        $scoring_system = ROOT . DS . 'data' . DS . 'scoring-system.zip';
+        $scoring_system_path = tempnam(sys_get_temp_dir(), 'ftcscoring');
         file_put_contents($scoring_system_path, file_get_contents($scoring_system));
         $linebreak = "\n";
-        $event = $this->Events->get($id, [
-            'contain' => ['Divisions.Leagues.Divisions.Teams', 'Divisions.Leagues.Divisions.Teams.Divisions', 'Divisions.Leagues.Divisions.Teams.Matches', 'Leagues.Divisions.Teams', 'Leagues.Divisions.Teams.Matches']
-        ]);
-
-        $teams = [];
-        if($event->type == 'championship') {
-            foreach($event->league->divisions as $division) {
-                $teams = array_merge($teams, $division->teams);
-            }
-            foreach($teams as $team) {
-                $team->present = true;
-            }
-        } else {
-            foreach($event->division->league->divisions as $division) {
-                $teams = array_merge($teams, $division->teams);
-            }
-            if(count($event->division->teams) < 15) {
-                foreach ($teams as $team) {
-                    if ($team->division->id == $event->division_id) {
-                        $team->present = true;
-                    } else {
-                        $team->present = false;
-                    }
-                }
-            }
-        }
-        $teamsFile = '';
-        foreach($teams as $team) {
-            $line = 1 . "|" . $team->id . "|"
-                . ($team->name ? $team->name : ' ') . "|"
-                . ($team->organization ? $team->organization : ' ') . "|"
-                . ($team->city ? $team->city : ' ') . "|"
-                . ($team->state ? $team->state : ' ') . "|"
-                . ($team->country ? $team->country : ' ') . "|"
-                . 'false' . "|" . ($team->present ? 'true' : 'false');
-            $res = [];
-            foreach($team->matches as $match) {
-                $res[] = $match->qp . '|' . $match->rp . '|' . $match->score;
-            }
-            $teamsFile .= $line . '|' . count($res) . '|' . implode('|', $res) . $linebreak;
-        };
-        $divisionsFile = '';
-        $divisionsFile .= 'Event Name' . $linebreak;
-        $divisionsFile .= $event->name . $linebreak;
-        $divisionsFile .= 'Event Type' . $linebreak;
-        $divisionsFile .= ($event->type == 'championship' ? 'LEAGUE_CHAMPIONSHIP' : 'LEAGUE') . $linebreak;
-        $divisionsFile .= 'Using Multiple Divisions' . $linebreak;
-        $divisionsFile .= 'false' . $linebreak;
-        $divisionsFile .= 'Number|Name|Matches Per Team|Password' . $linebreak;
-        $date = $event->date;
-        $month = $date->month - 1;
-        $divisionsFile .= "1|$event->name|0|$month|$date->day|$date->year|Illinois" . $linebreak;
+        $event = $this->Events->get($id);
 
         $zip = new ZipArchive;
         if ($zip->open($scoring_system_path) === TRUE) {
-            $zip->addFromString("teams.txt", $teamsFile);
-            $zip->addFromString("divisions.txt", $divisionsFile);
-            $properties = $zip->getFromName("FTCScoring.properties");
-            if($event->ftp_user && $event->ftp_pass) {
-                $properties .= $linebreak
-                    .= <<<EXTRAPROPS
-FTPUploadBaseDirectory=$event->ftp_path
-FTPUploadPort=$event->ftp_port
-FTPUploadSite=$event->ftp_host
-FTPUploadUser=$event->ftp_user
-FTPUploadPassword=$event->ftp_pass
-FTPUploadPassive=true
-EXTRAPROPS;
-            }
+            $zip_root =  explode('/', $zip->getNameIndex(0))[0];
 
-            $zip->addFromString("FTCScoring.properties", $properties);
+            $temp = tempnam(sys_get_temp_dir(), 'ftcscoring');
+            file_put_contents($temp, file_get_contents(ROOT . DS . 'data' . DS . 'base_scoring_dbs' . DS . 'server.db'));
+            $db = new SQLite3($temp);
+            $stmt = $db->prepare("DELETE FROM events WHERE code <> :code");
+            $stmt->bindValue("code", $event->slug);
+            $stmt->execute();
+            $db->close();
+            $zip->addFile(
+                ROOT. DS . 'data' . DS . 'base_scoring_dbs' . DS . $event->slug . '.db',
+                $zip_root . '/lib/db/' . $event->slug . '.db');
+//            debug($zip_root . '/lib/db/' . $event->slug . '.db');
+//            debug($zip->filename);
+            $zip->addFile($temp, $zip_root . '/lib/db/server.db');
 
             $zip->close();
         } else {
@@ -265,82 +215,57 @@ EXTRAPROPS;
 
         $response = $response->withFile($scoring_system_path);
 
-        $clean_event_name = Text::slug($event->name);
+        $clean_event_name = $event->slug;
         // Optionally force file download
-        $response = $response->withDownload("ftc-scoring-rr-$clean_event_name.zip");
+        $response = $response->withDownload("ftc-scoring-il-$clean_event_name-1819.zip");
 
         // Return response object to prevent controller from trying to render
         // a view.
         return $response;
     }
 
+    function resultSetToArray($queryResultSet){
+        $multiArray = array();
+        $count = 0;
+        while($row = $queryResultSet->fetchArray(SQLITE3_ASSOC)){
+            foreach($row as $i=>$value) {
+                $multiArray[$count][$i] = $value;
+            }
+            $count++;
+        }
+        return $multiArray;
+    }
+
     public function upload($id = null)
     {
         $event = $this->Events->get($id, [
-            'contain' => ['Leagues', 'Divisions']
+            'contain' => ['Leagues', 'Divisions', 'Matches']
         ]);
         if ($this->request->is(['post', 'patch', 'put'])) {
-            $upload_path = $this->request->data['scoring_dump']['tmp_name'];
-
-            $za = new ZipArchive();
-
-            $za->open($upload_path);
-
-            $matchFile = null;
-            for ($i=0; $i<$za->numFiles;$i++) {
-                $filename = basename(str_replace("\\","/",$za->statIndex($i)['name']));
-                if($filename == 'matches.txt') {
-                    $matchFile = $za->getFromIndex($i);
-                }
+            $dest_dir = WWW_ROOT . DS . 'event_results' . DS . $id . DS;
+            $filename = basename($this->request->getData('scoring_dump')['name']);
+            if(!file_exists($dest_dir)) {
+                mkdir($dest_dir, 0777, true);
             }
+            move_uploaded_file($this->request->getData('scoring_dump')['tmp_name'], $dest_dir . $filename);
+            $upload_path = $dest_dir . $filename;
+
+            $db = new SQLite3($upload_path);
+            $db->enableExceptions(true);
+            $stmt = $db->prepare("SELECT team, match, rp, tbp, score FROM leagueHistory WHERE eventCode = :code");
+            $stmt->bindValue("code", $event->slug);
+            $res = $this->resultSetToArray($stmt->execute());
 
             $success = true;
-            $jarfile = ROOT . DS . 'external' . DS . 'ftc-ranking-processor.jar';
-
-            $cmd = "java -jar ${jarfile}";
-
-            $descriptorSpec = array(
-                0 => ["pipe", "r"],  // stdin is a pipe that the child will read from
-                1 => ["pipe", "w"],  // stdout is a pipe that the child will write to
-                2 => ["pipe", "w"],
-            );
-
-            $process = proc_open($cmd, $descriptorSpec, $pipes);
-
-            $matchContent = null;
-            if (is_resource($process)) {
-                // $pipes now looks like this:
-                // 0 => writeable handle connected to child stdin
-                // 1 => readable handle connected to child stdout
-
-                fwrite($pipes[0], $matchFile);
-                fclose($pipes[0]);
-
-                $matchContent = stream_get_contents($pipes[1]);
-                fclose($pipes[1]);
-
-                $matchErrContent = stream_get_contents($pipes[2]);
-                fclose($pipes[2]);
-
-                // It is important that you close any pipes before calling
-                // proc_close in order to avoid a deadlock
-                $return_value = proc_close($process);
-            }
-            $parsedMatchFile = array_map(function ($l) {
-                return str_getcsv($l, '|');
-            }, explode("\n", $matchContent));
-
-            foreach ($parsedMatchFile as $matchArr) {
+            foreach ($res as $mData) {
                 $match = $this->Events->Matches->newEntity();
-                if (sizeof($matchArr) >= 5) {
-                    $match->num = $matchArr[0];
-                    $match->team_id = $matchArr[1];
-                    $match->qp = $matchArr[2];
-                    $match->rp = $matchArr[3];
-                    $match->score = $matchArr[4];
-                    $match->event_id = $event->id;
-                    $success = $success && $this->Events->Matches->save($match);
-                }
+                $match->num = $mData['match'];
+                $match->team_id = $mData['team'];
+                $match->rp = $mData['rp'];
+                $match->tbp = $mData['tbp'];
+                $match->score = $mData['score'];
+                $match->event_id = $event->id;
+                $success = $success && $this->Events->Matches->save($match);
             }
             if ($success) {
                 $this->Flash->success(__('The event has been imported.'));

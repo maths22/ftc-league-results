@@ -31,12 +31,12 @@
             <td><?= $this->Number->format($match->id) ?></td>
         </tr>
         <tr>
-            <th scope="row"><?= __('Rp') ?></th>
-            <td><?= $this->Number->format($match->rp) ?></td>
+            <th scope="row"><?= __('TBP') ?></th>
+            <td><?= $this->Number->format($match->tbp) ?></td>
         </tr>
         <tr>
-            <th scope="row"><?= __('Qp') ?></th>
-            <td><?= $this->Number->format($match->qp) ?></td>
+            <th scope="row"><?= __('Rp') ?></th>
+            <td><?= $this->Number->format($match->rp) ?></td>
         </tr>
         <tr>
             <th scope="row"><?= __('Score') ?></th>

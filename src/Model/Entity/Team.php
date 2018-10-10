@@ -9,6 +9,7 @@ use Cake\ORM\Entity;
  * @property int $id
  * @property string $name
  * @property int $division_id
+ * @property string $rookie_year
  *
  * @property \App\Model\Entity\Division $division
  * @property \App\Model\Entity\Match[] $matches

@@ -16,8 +16,8 @@
                 <th scope="col"><?= $this->Paginator->sort('id') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('num') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('team_id') ?></th>
+                <th scope="col"><?= $this->Paginator->sort('tbp') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('rp') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('qp') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('score') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('event_id') ?></th>
                 <th scope="col" class="actions"><?= __('Actions') ?></th>
@@ -29,8 +29,8 @@
                 <td><?= $this->Number->format($match->id) ?></td>
                 <td><?= h($match->num) ?></td>
                 <td><?= $match->has('team') ? $this->Html->link($match->team->name, ['controller' => 'Teams', 'action' => 'view', $match->team->id]) : '' ?></td>
+                <td><?= $this->Number->format($match->tbp) ?></td>
                 <td><?= $this->Number->format($match->rp) ?></td>
-                <td><?= $this->Number->format($match->qp) ?></td>
                 <td><?= $this->Number->format($match->score) ?></td>
                 <td><?= $match->has('event') ? $this->Html->link($match->event->name, ['controller' => 'Events', 'action' => 'view', $match->event->id]) : '' ?></td>
                 <td class="actions">

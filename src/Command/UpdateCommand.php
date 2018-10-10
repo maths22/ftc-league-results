@@ -6,7 +6,7 @@ use Cake\Console\Command;
 use Cake\Console\ConsoleIo;
 
 /**
- * @property  Teams
+ * @property  \App\Model\Table\TeamsTable $Teams
  */
 class UpdateCommand extends Command
 {
@@ -46,7 +46,8 @@ class UpdateCommand extends Command
             $team->city = $first_info['team_city'];
             $team->state = $first_info['team_stateprov'];
             $team->country = $first_info['team_country'];
-            $this->Teams->save($team);
+            $team->rookie_year = $first_info['team_rookieyear'];
+            $this->Teams->saveOrFail($team);
         }
     }
 }

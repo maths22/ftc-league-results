@@ -61,12 +61,12 @@ class Init extends AbstractMigration
                 'limit' => 11,
                 'null' => false,
             ])
-            ->addColumn('rp', 'integer', [
+            ->addColumn('tbp', 'integer', [
                 'default' => null,
                 'limit' => 11,
                 'null' => false,
             ])
-            ->addColumn('qp', 'integer', [
+            ->addColumn('rp', 'integer', [
                 'default' => null,
                 'limit' => 11,
                 'null' => false,

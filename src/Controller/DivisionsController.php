@@ -131,7 +131,7 @@ class DivisionsController extends AppController
 
     public function rankings($id = null) {
         $division = $this->Divisions->get($id, [
-            'contain' => ['Teams', 'Teams.Matches', 'Leagues', 'Events']
+            'contain' => ['Teams', 'Teams.Matches', 'Teams.Matches.Events', 'Leagues', 'Events']
         ]);
         $rankings = $this->Ranking->rankTeams($division->teams);
         $this->set('division', $division);

@@ -20,8 +20,8 @@
                 <?php endif; ?>
                 <?= __('Division') ?></th>
             <?php endif; ?>
-            <th scope="col" class="nowrap"><?= __('QP') ?></th>
             <th scope="col" class="nowrap"><?= __('RP') ?></th>
+            <th scope="col" class="nowrap"><?= __('TBP') ?></th>
             <th scope="col"><?= __('High Score') ?></th>
             <th scope="col"><?= __('Matches Played') ?></th>
         </tr>
@@ -41,8 +41,8 @@
                         <?= $ranking['division']->has('name') ? $this->Html->link($ranking['division']->name, ['controller' => 'Divisions', 'action' => 'rankings', $ranking['division']->id]) : '' ?>
                     </td>
                 <?php endif; ?>
-                <td class="nowrap"><?= $this->Number->format($ranking['qp']) ?></td>
                 <td class="nowrap"><?= $this->Number->format($ranking['rp']) ?></td>
+                <td class="nowrap"><?= $this->Number->format($ranking['tbp']) ?></td>
                 <td class="nowrap"><?= $this->Number->format(isset($ranking['scores'][0]) ? $ranking['scores'][0] : '') ?></td>
                 <td class="nowrap"><?= $this->Number->format($ranking['matches_played']) ?></td>
             </tr>

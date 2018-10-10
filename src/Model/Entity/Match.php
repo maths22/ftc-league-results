@@ -9,8 +9,8 @@ use Cake\ORM\Entity;
  * @property int $id
  * @property string $num
  * @property int $team_id
+ * @property int $tbp
  * @property int $rp
- * @property int $qp
  * @property int $score
  * @property int $event_id
  *

@@ -11,6 +11,7 @@ use Cake\ORM\Entity;
  * @property int $league_id
  * @property int $division_id
  * @property string $name
+ * @property string $slug
  * @property \Cake\I18n\FrozenDate $date
  *
  * @property \App\Model\Entity\League $league

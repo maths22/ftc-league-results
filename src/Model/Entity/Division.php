@@ -8,6 +8,7 @@ use Cake\ORM\Entity;
  *
  * @property int $id
  * @property string $name
+ * @property string slug
  * @property int $league_id
  *
  * @property \App\Model\Entity\League $league

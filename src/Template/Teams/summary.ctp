@@ -41,16 +41,16 @@
             <tr>
                 <th scope="col"><?= __('Event') ?></th>
                 <th scope="col"><?= __('Number') ?></th>
-                <th scope="col"><?= __('QP') ?></th>
                 <th scope="col"><?= __('RP') ?></th>
+                <th scope="col"><?= __('TBP') ?></th>
                 <th scope="col"><?= __('Score') ?></th>
             </tr>
             <?php foreach ($team->matches as $matches): ?>
             <tr>
                 <td><?= h($team->division->league->name  . ' ' . $team->division->name . ' - ' . $matches->event->name) ?></td>
                 <td><?= h($matches->num) ?></td>
-                <td><?= h($matches->qp) ?></td>
                 <td><?= h($matches->rp) ?></td>
+                <td><?= h($matches->tbp) ?></td>
                 <td><?= h($matches->score) ?></td>
             </tr>
             <?php endforeach; ?>

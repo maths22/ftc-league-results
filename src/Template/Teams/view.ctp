@@ -51,8 +51,8 @@
                 <th scope="col"><?= __('Id') ?></th>
                 <th scope="col"><?= __('Num') ?></th>
                 <th scope="col"><?= __('Team Id') ?></th>
+                <th scope="col"><?= __('TBP') ?></th>
                 <th scope="col"><?= __('Rp') ?></th>
-                <th scope="col"><?= __('Qp') ?></th>
                 <th scope="col"><?= __('Score') ?></th>
                 <th scope="col"><?= __('Event Id') ?></th>
                 <th scope="col" class="actions"><?= __('Actions') ?></th>
@@ -62,8 +62,8 @@
                 <td><?= h($matches->id) ?></td>
                 <td><?= h($matches->num) ?></td>
                 <td><?= h($matches->team_id) ?></td>
+                <td><?= h($matches->tbp) ?></td>
                 <td><?= h($matches->rp) ?></td>
-                <td><?= h($matches->qp) ?></td>
                 <td><?= h($matches->score) ?></td>
                 <td><?= h($matches->event_id) ?></td>
                 <td class="actions">

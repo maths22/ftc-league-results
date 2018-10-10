@@ -8,6 +8,7 @@ use Cake\ORM\Entity;
  *
  * @property int $id
  * @property string $name
+ * @property string slug
  *
  * @property \App\Model\Entity\Division[] $divisions
  */

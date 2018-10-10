@@ -15,8 +15,8 @@
         <?php
             echo $this->Form->input('num');
             echo $this->Form->input('team_id', ['options' => $teams]);
+            echo $this->Form->input('tbp');
             echo $this->Form->input('rp');
-            echo $this->Form->input('qp');
             echo $this->Form->input('score');
             echo $this->Form->input('event_id', ['options' => $events]);
         ?>

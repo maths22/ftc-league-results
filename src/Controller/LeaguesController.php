@@ -135,7 +135,7 @@ class LeaguesController extends AppController
 
     public function rankings($id = null) {
         $league = $this->Leagues->get($id, [
-            'contain' => ['Divisions','Divisions.Teams', 'Divisions.Teams.Matches', 'Divisions.Teams.Divisions']
+            'contain' => ['Divisions','Divisions.Teams', 'Divisions.Teams.Matches', 'Divisions.Teams.Matches.Events', 'Divisions.Teams.Divisions']
         ]);
         $teams = [];
         foreach($league->divisions as $division) {

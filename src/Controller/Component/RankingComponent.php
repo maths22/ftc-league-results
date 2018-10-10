@@ -19,11 +19,11 @@ class RankingComponent extends Component
             $rankings[] = $this->computeRanking($team);
         }
         usort($rankings, function ($r2, $r1) {
-            $diff = $r1['qp'] - $r2['qp'];
+            $diff = $r1['rp'] - $r2['rp'];
             if($diff != 0) {
                 return $diff;
             }
-            $diff = $r1['rp'] - $r2['rp'];
+            $diff = $r1['tbp'] - $r2['tbp'];
             if($diff != 0) {
                 return $diff;
             }
@@ -42,17 +42,17 @@ class RankingComponent extends Component
     public function computeRanking($team) {
         $matches = $team->matches;
         $matches = array_filter($matches, function($match) {
-           return $match->qp >= 0 && $match->event->type != 'championship';
+           return $match->rp >= 0 && $match->event->type != 'championship';
         });
 
         $matches_played = sizeof($matches);
 
         usort($matches, function ($m2, $m1) {
-            $diff = $m1->qp - $m2->qp;
+            $diff = $m1->rp - $m2->rp;
             if($diff != 0) {
                 return $diff;
             }
-            $diff = $m1->rp - $m2->rp;
+            $diff = $m1->tbp - $m2->tbp;
             if($diff != 0) {
                 return $diff;
             }
@@ -65,8 +65,8 @@ class RankingComponent extends Component
             'team_name' => $team->name,
             'division' => $team->division,
             'matches_played' => $matches_played,
-            'qp' => 0,
             'rp' => 0,
+            'tbp' => 0,
             'scores' => []
         ];
 
@@ -77,8 +77,8 @@ class RankingComponent extends Component
         $matches = array_slice($matches, 0, 10);
 
         foreach($matches as $match) {
-            $ret['qp'] += $match->qp;
             $ret['rp'] += $match->rp;
+            $ret['tbp'] += $match->tbp;
         }
         rsort($ret['scores']);
 
