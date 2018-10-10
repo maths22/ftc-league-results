@@ -12,7 +12,7 @@
 </nav>
 <div class="events index large-9 medium-8 columns content">
     <h3><?= __('Events') ?></h3>
-    Please remember after your event to submit event results here: <?= $this->Html->link('Upload Results Here', 'https://goo.gl/forms/b4c3nYsVT078X3or2') ?>
+    Please remember after your event to submit event results here: <?= $this->Html->link('Upload Results Here', 'https://goo.gl/forms/iJU3Z0EghiYVp8UF3') ?>
     <table cellpadding="0" cellspacing="0">
         <thead>
             <tr>
