@@ -7,6 +7,7 @@ use Cake\Console\ConsoleIo;
 use PDO;
 use PDOException;
 use SQLite3;
+use ZipArchive;
 
 /**
  * @property  \App\Model\Table\TeamsTable $Teams
@@ -75,6 +76,18 @@ class GenerateScoringCommand extends Command
         return $path;
     }
 
+    function resultSetToArray($queryResultSet, $assoc = true){
+        $multiArray = array();
+        $count = 0;
+        while($row = $queryResultSet->fetchArray(SQLITE3_ASSOC)){
+            foreach($row as $i=>$value) {
+                $multiArray[$count][$i] = $value;
+            }
+            $count++;
+        }
+        return $multiArray;
+    }
+
 
     public function execute(Arguments $args, ConsoleIo $io)
     {
@@ -84,6 +97,22 @@ class GenerateScoringCommand extends Command
         chdir($tmpdir);
 
         try {
+            $awards = [];
+            $zip = new ZipArchive;
+            if ($zip->open(ROOT . DS . 'data' . DS . 'scoring-system.zip') === TRUE) {
+                for ($i = 0; $i < $zip->numFiles; $i++) {
+                    if(strpos($zip->getNameIndex($i), 'global.db') !== false) {
+                        file_put_contents('global.db', $zip->getFromIndex($i));
+                    }
+                }
+            }
+            if(file_exists('global.db')) {
+                $global_db = new SQLite3('global.db');
+                $global_db->enableExceptions(true);
+                $stmt = $global_db->prepare("SELECT id, name, description, teamAward, editable, required, awardOrder FROM awardInfo");
+                $awards = $this->resultSetToArray($stmt->execute());
+            }
+
             $server_db = new SQLite3('server.db');
             $server_db->enableExceptions(true);
             $server_db_init = file_get_contents(ROOT . '/resources/sql/create_server_db.sql');
@@ -177,6 +206,8 @@ class GenerateScoringCommand extends Command
                 $add_team_info_stmt->bindParam('country', $country);
                 $add_team_info_stmt->bindParam('rookie', $rookie_year, PDO::PARAM_INT);
 
+
+
                 foreach ($league->divisions as $division) {
                     $league_code = $division->slug;
                     $league_name = $division->name;
@@ -210,7 +241,29 @@ class GenerateScoringCommand extends Command
                     }
                 }
 
-                // TODO: import complete divisions, default awards
+                $add_award_info_stmt = $event_db->prepare("INSERT INTO awardInfo
+                          (id, name, description, teamAward, editable, required, awardOrder)
+                          VALUES (:id, :name, :description, :teamAward, :editable, :required, :awardOrder)");
+                $add_award_info_stmt->bindParam("id", $award_id);
+                $add_award_info_stmt->bindParam("name", $award_name);
+                $add_award_info_stmt->bindParam("description", $award_descr);
+                $add_award_info_stmt->bindParam("teamAward", $team_award);
+                $add_award_info_stmt->bindParam("editable", $editable);
+                $add_award_info_stmt->bindParam("required", $required);
+                $add_award_info_stmt->bindParam("awardOrder", $award_order);
+
+                foreach ($awards as $award) {
+                    $award_id = $award['id'];
+                    $award_name = $award['name'];
+                    $award_descr = $award['description'];
+                    $team_award = $award['teamAward'];
+                    $editable = $award['editable'];
+                    $required = $award['required'];
+                    $award_order = $award['awardOrder'];
+                    $add_award_info_stmt->execute();
+                }
+
+                // TODO: import complete events
             }
         } catch( PDOException $Exception ) {
             print_r($Exception->getMessage());
