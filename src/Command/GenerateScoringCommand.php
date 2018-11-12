@@ -263,6 +263,10 @@ class GenerateScoringCommand extends Command
                     $add_award_info_stmt->execute();
                 }
 
+                $set_db_version_stmt = $event_db->prepare("INSERT OR REPLACE INTO config VALUES('db.version',:version)");
+                $set_db_version_stmt->bindValue("version", "2019_2");
+                $set_db_version_stmt->execute();
+
                 // TODO: import complete events
             }
         } catch( PDOException $Exception ) {
